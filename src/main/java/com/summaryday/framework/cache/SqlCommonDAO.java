@@ -347,6 +347,8 @@ public class SqlCommonDAO {
 		}
 		return rs;
 	}
+
+	//批量插入
 	public  int  executeCommit(Connection conn,StringBuffer all_sql) {
 		Statement st = null;
 		int rs = 0;
@@ -358,9 +360,9 @@ public class SqlCommonDAO {
 			}
 			try {
 				 rs = st.executeUpdate(all_sql.toString());
-                int[] n=st.executeBatch();
-                    rs=n.length;
-				    st.clearBatch();
+               // int[] n=st.executeBatch();
+                //    rs=n.length;
+				//    st.clearBatch();
 			} catch (Exception e) {
 				log.error("executeCommit-executeUpdate批量入库异常：\n all_sql:"+all_sql,e);
 			}finally{

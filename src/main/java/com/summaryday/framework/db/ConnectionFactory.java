@@ -5,14 +5,12 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ConnectionFactory {
 	private static final Logger logger = LoggerFactory.getLogger(ConnectionFactory.class);
 
-	private static ComboPooledDataSource ds = null;
 	private static DruidDataSource        dd=null;
 	private static  ResourceBundle   BUNDLE =null;
 	//private static final ResourceBundle  BUNDLE = ResourceBundle.getBundle("db");
@@ -93,44 +91,12 @@ public class ConnectionFactory {
 		}
 		
 		try {
-			Develop_Mode=StringUtil.StringToBoolean(BUNDLE.getString("develop_mode"));
+			Develop_Mode=Boolean.parseBoolean(BUNDLE.getString("develop_mode"));
 		} catch (Exception e1) {
 			logger.error("警告:获取develop_mode异常："+e1.getMessage());
 		}
 		
-		if(PoolType!=null&&"c3p0".equals(PoolType.toLowerCase())){
-	        try{				
-	              ds = new ComboPooledDataSource();
-	              ds.setDriverClass(BUNDLE.getString(DRIVER));  
-	              ds.setJdbcUrl(BUNDLE.getString(URL));
-	              ds.setUser(BUNDLE.getString(USERNAME));
-	              ds.setPassword(BUNDLE.getString(PASSWORD));
-		          
-	            	ds.setAutoCommitOnClose(StringUtil.StringToBoolean(BUNDLE.getString(AutoCommitOnClose)));
-	            	ds.setCheckoutTimeout(StringUtil.StringToInteger(BUNDLE.getString(TIMEOUT)));
-	            	ds.setAcquireRetryDelay(StringUtil.StringToInteger(BUNDLE.getString(RetryDelay)));
-	            	ds.setAcquireRetryAttempts(StringUtil.StringToInteger(BUNDLE.getString(RetryAttempts)));
-					ds.setMaxPoolSize(StringUtil.StringToInteger(BUNDLE.getString(MAXPOOLSIZE)));
-					ds.setMinPoolSize(StringUtil.StringToInteger(BUNDLE.getString(MINPOOLSIZE)));
-					ds.setIdleConnectionTestPeriod(StringUtil.StringToInteger(BUNDLE.getString(IDLETESTPERIOD)));
-					ds.setAcquireIncrement(StringUtil.StringToInteger(BUNDLE.getString(ACQUIREINCREMENT)));
-					ds.setInitialPoolSize(StringUtil.StringToInteger(BUNDLE.getString(INITIALPOOLSIZE)));
-					ds.setMaxStatements(StringUtil.StringToInteger(BUNDLE.getString(MAXSTATEMENTS)));
-					ds.setNumHelperThreads(StringUtil.StringToInteger(BUNDLE.getString(HELPERTHEADS)));
-					ds.setMaxIdleTime(StringUtil.StringToInteger(BUNDLE.getString(IDLETIME)));
-					
-					ConnectionFactory.DIALECT   =BUNDLE.getString("dialect");
-					ConnectionFactory.SQL_FORMAT=StringUtil.StringToBoolean(BUNDLE.getString("sql_format"));
-					ConnectionFactory.EHCACHE   =StringUtil.StringToBoolean(BUNDLE.getString("ehcache"));
-					logger.info("\n"+
-					"=====================================\n"+
-					"‖                         c3p0初始化                               ‖\n"+
-					"=====================================\n"
-					+"\n");
-		} catch (Exception e) {
-			logger.error("c3p0连接池参数选择："+e.getMessage());
-		}
-    }else	if (PoolType!=null&&"druid".equals(PoolType.toLowerCase())) {
+		if (PoolType!=null&&"druid".equals(PoolType.toLowerCase())) {
 		//driud
 		 try{
 				
@@ -141,39 +107,39 @@ public class ConnectionFactory {
 				dd.setPassword(BUNDLE.getString(PASSWORD));
 				
 				
-				dd.setInitialSize(StringUtil.StringToInteger(BUNDLE.getString(INITIALSIZE)));
-				dd.setMaxActive(StringUtil.StringToInteger(BUNDLE.getString(maxActive)));
-				dd.setMinIdle(StringUtil.StringToInteger(BUNDLE.getString(MINIDLE)));
-				dd.setMaxWait(StringUtil.StringToInteger(BUNDLE.getString(maxWait)));
+				dd.setInitialSize(Integer.parseInt(BUNDLE.getString(INITIALSIZE)));
+				dd.setMaxActive(Integer.parseInt(BUNDLE.getString(maxActive)));
+				dd.setMinIdle(Integer.parseInt(BUNDLE.getString(MINIDLE)));
+				dd.setMaxWait(Integer.parseInt(BUNDLE.getString(maxWait)));
 
 				// 启用监控统计功能
 				if (DIALECT!=null&&DIALECT.toLowerCase().indexOf("mysql") > -1){
 					// for mysql
 						dd.setValidationQuery(BUNDLE.getString(validationQuery));
 					}else{
-						dd.setPoolPreparedStatements(StringUtil.StringToBoolean(BUNDLE.getString(PoolPreparedStatements)));
-						dd.setMaxPoolPreparedStatementPerConnectionSize(StringUtil.StringToInteger(BUNDLE.getString(maxPoolPreparedStatementPerConnectionSize)));
-						dd.setMaxOpenPreparedStatements(StringUtil.StringToInteger(BUNDLE.getString(MAXOPENPREPAREDSTATEMENTS)));
+						dd.setPoolPreparedStatements(Boolean.parseBoolean(BUNDLE.getString(PoolPreparedStatements)));
+						dd.setMaxPoolPreparedStatementPerConnectionSize(Integer.parseInt(BUNDLE.getString(maxPoolPreparedStatementPerConnectionSize)));
+						dd.setMaxOpenPreparedStatements(Integer.parseInt(BUNDLE.getString(MAXOPENPREPAREDSTATEMENTS)));
 					}
 				
 				dd.setFilters(BUNDLE.getString(filters));
-				dd.setDefaultAutoCommit(StringUtil.StringToBoolean(BUNDLE.getString(AutoCommitOnClose)));
+				dd.setDefaultAutoCommit(Boolean.parseBoolean(BUNDLE.getString(AutoCommitOnClose)));
 				dd.setValidationQuery(BUNDLE.getString(validationQuery));
-				dd.setMinEvictableIdleTimeMillis(StringUtil.StringToInteger(BUNDLE.getString(minEvictableIdleTimeMillis)));
-				dd.setTimeBetweenEvictionRunsMillis(StringUtil.StringToInteger(BUNDLE.getString(timeBetweenEvictionRunsMillis)));
-				dd.setTestWhileIdle(StringUtil.StringToBoolean(BUNDLE.getString("testWhileIdle")));
-				dd.setTestOnReturn(StringUtil.StringToBoolean(BUNDLE.getString(TestOnReturn)));
-				dd.setTestOnBorrow(StringUtil.StringToBoolean(BUNDLE.getString(TestOnBorrow)));
+				dd.setMinEvictableIdleTimeMillis(Integer.parseInt(BUNDLE.getString(minEvictableIdleTimeMillis)));
+				dd.setTimeBetweenEvictionRunsMillis(Integer.parseInt(BUNDLE.getString(timeBetweenEvictionRunsMillis)));
+				dd.setTestWhileIdle(Boolean.parseBoolean(BUNDLE.getString("testWhileIdle")));
+				dd.setTestOnReturn(Boolean.parseBoolean(BUNDLE.getString(TestOnReturn)));
+				dd.setTestOnBorrow(Boolean.parseBoolean(BUNDLE.getString(TestOnBorrow)));
 				try {
-					dd.setRemoveAbandoned(StringUtil.StringToBoolean(BUNDLE.getString(RemoveAbandoned)));
-					dd.setRemoveAbandonedTimeout(StringUtil.StringToInteger(BUNDLE.getString(RemoveAbandonedTimeout)));
+					dd.setRemoveAbandoned(Boolean.parseBoolean(BUNDLE.getString(RemoveAbandoned)));
+					dd.setRemoveAbandonedTimeout(Integer.parseInt(BUNDLE.getString(RemoveAbandonedTimeout)));
 				} catch (Exception e) {
 					
 				}
 				
 				ConnectionFactory.DIALECT    = BUNDLE.getString("dialect");
-				ConnectionFactory.SQL_FORMAT = StringUtil.StringToBoolean(BUNDLE.getString("sql_format"));
-				ConnectionFactory.EHCACHE    = StringUtil.StringToBoolean(BUNDLE.getString("ehcache"));
+				ConnectionFactory.SQL_FORMAT = Boolean.parseBoolean(BUNDLE.getString("sql_format"));
+				ConnectionFactory.EHCACHE    = Boolean.parseBoolean(BUNDLE.getString("ehcache"));
 				logger.info("\n"+
 						"=====================================\n"+
 						"‖                         druid初始化                               ‖\n"+
@@ -195,10 +161,7 @@ public class ConnectionFactory {
 	        long s=System.currentTimeMillis();
 	        try {
 	        	if(EncryptUtils.LOCK){
-		        	 if(PoolType!=null&&"c3p0".equals(PoolType.toLowerCase())) 
-		            {
-						con = ds.getConnection();
-		            }else if(PoolType!=null&&"druid".equals(PoolType.toLowerCase())){
+		        	 if(PoolType!=null&&"druid".equals(PoolType.toLowerCase())){
 		            	con=dd.getConnection();
 		            }
 	        	}else{

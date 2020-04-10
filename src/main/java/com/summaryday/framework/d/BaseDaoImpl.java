@@ -1,11 +1,10 @@
 package com.summaryday.framework.d;
 
+import com.summaryday.framework.db.DBHelper;
+
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-
-import com.summaryday.framework.db.DBHelper;
-import com.summaryday.framework.db.DBSetting;
 
 public class BaseDaoImpl implements IBaseDao {
 	

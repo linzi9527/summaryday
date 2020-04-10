@@ -1,5 +1,7 @@
 package com.summaryday.framework.db;
 
+import net.sf.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
@@ -13,7 +15,6 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import net.sf.json.JSONObject;
 /**
  * 加密解密工具类
  */
@@ -189,8 +190,8 @@ public class EncryptUtils {
     /**
      * 根据相应的解密算法、指定的密钥和需要解密的文本进行解密，返回解密后的文本内容
      * @param Algorithm 加密算法:DES,AES
-     * @param key 这个key可以由用户自己指定 注意AES的长度为16位,DES的长度为8位
-     * @param sInfo
+     * @paramskey 这个skey可以由用户自己指定 注意AES的长度为16位,DES的长度为8位
+     * @param
      * @return
      */
     public static String decrypt(String Algorithm, String sSrc, String sKey) throws Exception {
@@ -227,8 +228,8 @@ public class EncryptUtils {
     /**
      * 根据相应的加密算法、指定的密钥、源文件进行加密，返回加密后的文件
      * @param Algorithm 加密算法:DES,AES
-     * @param key 这个key可以由用户自己指定 注意AES的长度为16位,DES的长度为8位
-     * @param info
+     * @paramskey 这个key可以由用户自己指定 注意AES的长度为16位,DES的长度为8位
+     * @param sSrc
      * @return
      */
     public static String encrypt(String Algorithm, String sSrc, String sKey) throws Exception {
@@ -335,7 +336,7 @@ public class EncryptUtils {
     /**
      * 十六进制字符串转化为2进制
      * 
-     * @param hex
+     * @paramhex
      * @return
      */
     public static byte[] hex2byte(String strhex) {
@@ -433,8 +434,8 @@ public class EncryptUtils {
     	
     	return jsonobject;
     }
-    
-    
+
+
     public static void isGOTO(){
     	boolean lock=false,flag=false;
     	EncryptUtils encryptUtils = new EncryptUtils();
@@ -480,6 +481,31 @@ public class EncryptUtils {
     	
     	
     }
+
+
+
+    public static void main(String[] args) throws Exception{
+        EncryptUtils e=new EncryptUtils();
+
+      /*  String info="{d:\".dingdongxueche.com\",status:false,s:\"20200101\",e:\"20251030\"}";
+         String result= e.encryptToAES("dingdongxuechecn",info);
+        System.out.println("result="+result);
+        String KEY="$"+result+"p";*/
+        //String KEY="3FCB47C38A8361400ACB809697+CA7F0CD62864DB43AE6$18C1DF2F1D2901@B9BB5AD3BADD0158B38F731F951372D2876F8E5EF&A00D786FBAD4CA6609457887971761BAE94A11C338FC76FC248AD7D22FB5p";
+        //String KEY="3FCB47C3+8A8361400ACB809697CA7F0CD62@864DB43AE618C1DF2F1D2901B9BB5BB2$B75087B90DEBA43D1AD1B60C19FD9&0CBE125C4820ADB1A5ECDFBFD2%983B0361BAE94A11C338FC76FC248AD7D22FB5p";
+
+        String KEY="3FCB47C38A8361400ACB809697CA7F0CD62864DB43AE618C1DF2F1D2901B9BB5194C966AF3B78B558B99F92+77AE2C5EEBE4BCF456DB0$A42075959AB8%09E33C7261BAE94A11C3@38FC76FC248AD7&D22FB5P";
+        KEY = KEY.replaceAll("\\+", "");
+        KEY = KEY.replaceAll("\\@", "");
+        KEY = KEY.replaceAll("\\$", "");
+        KEY = KEY.replaceAll("\\&", "");
+        KEY = KEY.replaceAll("\\%", "");
+        KEY = KEY.substring(0, KEY.length() - 1);
+         String res= e.decryptByAES("dingdongxuechecn",KEY);
+        System.out.println("res="+res);
+    }
+
+
     
   
 }

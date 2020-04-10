@@ -29,13 +29,13 @@ public class PropertiesUtils {
 		if(null!=BUNDLE_db){
 			logger.info("加载single库配置文件[db.properties], 已开起单库模式...");
 			try {
-				JSON_LOG=StringUtil.StringToBoolean(BUNDLE_db.getString("json_log"));
+				JSON_LOG=Boolean.parseBoolean(BUNDLE_db.getString("json_log"));
 			} catch (Exception e) {
 				logger.error("配置文件加载JSON_LOG异常:"+e.getMessage());
 			}
 			try {
-				      SQL_FORMAT=StringUtil.StringToBoolean(BUNDLE_db.getString("sql_format"));
-				      Develop_Mode=StringUtil.StringToBoolean(BUNDLE_db.getString("develop_mode"));
+				      SQL_FORMAT=Boolean.parseBoolean(BUNDLE_db.getString("sql_format"));
+				      Develop_Mode=Boolean.parseBoolean(BUNDLE_db.getString("develop_mode"));
 			} catch (Exception e) {
 				logger.error("配置文件加载Develop_Mode,SQL_FORMAT异常:"+e.getMessage());
 			}
