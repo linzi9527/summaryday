@@ -2186,7 +2186,7 @@ public class DBHelper {
 	 * @param ids 所有要删除的字符串数组id
 	 * @return
 	 */
-	public  boolean removeByTransaction(String[] ids,Class<?> o) {
+	public  boolean removeByTransaction(Object[] ids,Class<?> o) {
 		
 		String tbl_name = "";
 		boolean flag = false, flag_is = false;
@@ -2239,13 +2239,13 @@ public class DBHelper {
 					
 					for(int n=0;n<ids.length;n++){
 						String DEL_SQL=null;
-						if(SQL.indexOf("INT")>0){
-							SQL.replace("INT", "");
-							DEL_SQL=SQL + "=" + ids[n] + " ";
+						if(sql.toString().indexOf("INT")>0){
+							SQL=SQL.replace("INT", "=");
+							DEL_SQL=SQL  + ids[n] + " ";
 						}else
-						if(SQL.indexOf("STRING")>0){
-							SQL.replace("STRING", "");
-							DEL_SQL=SQL + "='" + ids[n] + "' ";
+						if(sql.toString().indexOf("STRING")>0){
+							SQL=SQL.replace("STRING", "=");
+							DEL_SQL=SQL + "'" + ids[n] + "' ";
 						}
 						
 						Command c = new Command();

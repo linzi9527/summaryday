@@ -59,6 +59,7 @@ public class ConnectionFactory {
 	private static final String                           TestOnReturn="testOnReturn";
 	private static final String                        RemoveAbandoned="removeAbandoned";
 	private static final String                 RemoveAbandonedTimeout="removeAbandonedTimeout";
+	private static final String                           LogAbandoned="logAbandoned";
 	
 	public  static  boolean     EHCACHE=false;
 	public  static  String     DIALECT =null;
@@ -81,7 +82,7 @@ public class ConnectionFactory {
 		try {
 			EncryptUtils.isGOTO();
 		} catch (Exception e) {
-			System.out.println("安全-注册失效，服务会受影响！");
+			logger.error("系统检测未能通过安全问题[代码：776]");
 		}
 		
 		try {
@@ -131,10 +132,15 @@ public class ConnectionFactory {
 				dd.setTestOnReturn(Boolean.parseBoolean(BUNDLE.getString(TestOnReturn)));
 				dd.setTestOnBorrow(Boolean.parseBoolean(BUNDLE.getString(TestOnBorrow)));
 				try {
+					//超过时间限制是否回收
 					dd.setRemoveAbandoned(Boolean.parseBoolean(BUNDLE.getString(RemoveAbandoned)));
+					//超时时间；单位为秒。180秒=3分钟
 					dd.setRemoveAbandonedTimeout(Integer.parseInt(BUNDLE.getString(RemoveAbandonedTimeout)));
+					//关闭abanded连接时输出错误日志
+					dd.setLogAbandoned(Boolean.parseBoolean(BUNDLE.getString(LogAbandoned)));
+					//超过180s，强制回收数据库连接，回收的时候打印日志，日志中会显示代码中没有释放数据库连接的代码具体位置
 				} catch (Exception e) {
-					
+					logger.error("参数[RemoveAbandoned,RemoveAbandonedTimeout,LogAbandoned]转换异常:"+e.getMessage());
 				}
 				
 				ConnectionFactory.DIALECT    = BUNDLE.getString("dialect");
@@ -142,7 +148,7 @@ public class ConnectionFactory {
 				ConnectionFactory.EHCACHE    = Boolean.parseBoolean(BUNDLE.getString("ehcache"));
 				logger.info("\n"+
 						"=====================================\n"+
-						"‖                         druid初始化                               ‖\n"+
+						"‖             druid初始化            ‖\n"+
 						"=====================================\n"
 						+"\n");
 		} catch (Exception e) {
@@ -165,7 +171,7 @@ public class ConnectionFactory {
 		            	con=dd.getConnection();
 		            }
 	        	}else{
-	        		System.out.println("系统为了系统安全，服务暂停！");
+					logger.error("系统检测未能通过安全问题[代码：777]");
 	        	}
 	        } catch (SQLException e1) {
 	        	logger.error("\n 连接池--获取数据库连接异常："+e1.getMessage());
@@ -194,8 +200,8 @@ public class ConnectionFactory {
 	                }
 	                logger.info("\n"+
 							"=========================================================================\n"+
-							"‖                                                            数据源实例化                                                                   ‖\n"+
-							"‖                   "+instance+"	 	‖\n"+
+							"‖  数据源实例化                                                           ‖\n"+
+							"‖  "+instance+"	 	‖\n"+
 							"=========================================================================\n"
 							+"\n");
 	            }
